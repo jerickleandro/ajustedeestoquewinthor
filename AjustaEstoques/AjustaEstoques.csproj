@@ -50,6 +50,7 @@
     <Compile Include="Banco\Exceptions\DomainException.cs" />
     <Compile Include="Banco\SqlConn\DBOracleUtils.cs" />
     <Compile Include="Banco\SqlConn\DBUtils.cs" />
+    <Compile Include="Entities\Product.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
