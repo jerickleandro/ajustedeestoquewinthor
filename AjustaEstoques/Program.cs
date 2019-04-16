@@ -108,14 +108,14 @@ namespace AjustaEstoques
 
 
 
-                    //using (var comm = new Oracle.DataAccess.Client.OracleCommand())
-                    //{
-                    //    comm.Connection = conn;
+                    using (var comm = new Oracle.DataAccess.Client.OracleCommand())
+                    {
+                        comm.Connection = conn;
 
-                    //    comm.CommandText = "UPDATE PCEST SET QTESTGER = QTESTGER - (SELECT SUM(A.QT) FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL AND A.CODPROD = PCEST.CODPROD) WHERE CODFILIAL = 1 AND CODPROD IN(SELECT A.CODPROD FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL) ";
-                    //    comm.Parameters.Add("Data", data);
-                    //    comm.ExecuteNonQuery();
-                    //}
+                        comm.CommandText = "UPDATE PCEST SET QTESTGER = QTESTGER - (SELECT SUM(A.QT) FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL AND A.CODPROD = PCEST.CODPROD) WHERE CODFILIAL = 1 AND CODPROD IN(SELECT A.CODPROD FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL) ";
+                        comm.Parameters.Add("Data", data);
+                        comm.ExecuteNonQuery();
+                    }
 
 
 
