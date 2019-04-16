@@ -144,11 +144,25 @@ namespace AjustaEstoques
                                     {
                                         sw.WriteLine(" ---------------------------  Execução com erro: " + DateTime.Now + " -----------------------------");
                                         sw.WriteLine("Erro no codigo: " + codprod);
-                                        //foreach (Product prod in products)
-                                        //{
-                                        //    sw.WriteLine(prod);
-                                        //}
+                   
                                     }
+                                    foreach (Product prod in products)
+                                    {
+                                        using (var comm2 = new Oracle.DataAccess.Client.OracleCommand())
+                                        {
+                                            comm2.Connection = conn;
+
+                                            comm2.CommandText = "UPDATE PCEST SET QTESTGER = :Qtestger where codprod = :Codprod and codfilial = 1";
+                                            comm2.Parameters.Add("Qtestger", prod.Qtestger);
+                                            comm2.Parameters.Add("Codprod", prod.Codprod);
+                                            comm2.ExecuteNonQuery();
+                                        }
+
+                                    }
+
+
+
+
 
                                     break;
 
