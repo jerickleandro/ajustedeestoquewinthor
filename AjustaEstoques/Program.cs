@@ -103,7 +103,15 @@ namespace AjustaEstoques
                     }
 
 
-
+                    string update = "UPDATE PCEST SET QTESTGER = QTESTGER - (SELECT SUM(A.QT) " +
+                        "FROM PCMOV A, PCNFSAID B" +
+                        " WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA " + 
+                        "AND A.DTMOV = " + data + " AND A.CODFILIAL = 50 " +
+                        "AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL " +
+                        "AND A.CODPROD = PCEST.CODPROD) " +
+                        "WHERE CODFILIAL = 1 AND CODPROD IN" +
+                        "(SELECT A.CODPROD FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA " + 
+                        "AND A.DTMOV = " + data +  " AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL)";
 
 
 
@@ -112,8 +120,7 @@ namespace AjustaEstoques
                     {
                         comm.Connection = conn;
 
-                        comm.CommandText = "UPDATE PCEST SET QTESTGER = QTESTGER - (SELECT SUM(A.QT) FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL AND A.CODPROD = PCEST.CODPROD) WHERE CODFILIAL = 1 AND CODPROD IN(SELECT A.CODPROD FROM PCMOV A, PCNFSAID B WHERE A.NUMTRANSVENDA = B.NUMTRANSVENDA AND A.DTMOV = :Data AND A.CODFILIAL = 50 AND A.CODOPER = 'S' AND B.DTCANCEL IS NULL) ";
-                        comm.Parameters.Add("Data", data);
+                        comm.CommandText = update;
                         comm.ExecuteNonQuery();
                     }
 
@@ -127,17 +134,18 @@ namespace AjustaEstoques
                         comm.Connection = conn;
                         using (var reader = comm.ExecuteReader())
                         {
-
+                            int i = 0;
                             while (reader.Read())
                             {
                                 var codprod = reader["CODPROD"];
                                 var qtestger = reader["QTESTGER"];
+                                decimal qtestgerdec = (decimal)qtestger;
                                 var giro = reader["GIRO"];
                                 var saldo_final = reader["SALDO_FINAL"];
 
 
-
-                                if (qtestger != saldo_final)
+                                
+                                if (qtestgerdec != products[i].Qtestger)
                                 {
 
                                     using (StreamWriter sw = File.AppendText("entrada2.txt"))
@@ -175,6 +183,7 @@ namespace AjustaEstoques
                                         sw.WriteLine(prod);
                                     }
                                 }
+                                i++;
                             }
                         }
 
